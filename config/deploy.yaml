@@ -1,0 +1,228 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demoservice
+  labels:
+    group: istiodemo
+    app: demoservice
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: demoservice
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: demoservice-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        group: istiodemo
+        app: demoservice
+        version: v1
+    spec:
+      containers:
+      - name: demoservice
+        image: DEMO_V1
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "64Mi"
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: demoservice-v2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        group: istiodemo
+        app: demoservice
+        version: v2
+    spec:
+      containers:
+      - name: demoservice
+        image: DEMO_V2
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "64Mi"
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+        imagePullPolicy:  Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config
+  labels:
+    group: istiodemo
+    app: config
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: config
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: config-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        group: istiodemo
+        app: config
+        version: v1
+    spec:
+      containers:
+      - name: config
+        image: CONFIG_V1 
+        resources:
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+          requests:
+            cpu: "300m"
+            memory: "128Mi"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: demoservice-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: demoservice-destination
+  namespace: default
+spec:
+  host: demoservice
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: demoservice
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - demoservice-gateway
+  http:
+  - match:  
+    - uri:
+        exact: /config 
+    route:
+    - destination:
+        host: config
+        port:
+          number: 8080
+  - match:  
+    - uri:
+        exact: /ui 
+    route:
+    - destination:
+        host: config
+        port:
+          number: 8080
+  - match:  
+    - uri:
+        regex: '/balance(.*)'
+    route:
+    - destination:
+        host: config
+        port:
+          number: 8080
+  - match:  
+    - uri:
+        exact: /terminate-v1
+    route:
+    - destination:
+        host: demoservice 
+        subset: v1
+        port:
+          number: 8080  
+  - match:  
+    - uri:
+        exact: /terminate-v2
+    route:
+    - destination:
+        host: demoservice 
+        subset: v2
+        port:
+          number: 8080    
+  - match:
+    - headers:
+        mc-user:
+          exact: john
+      uri:
+        exact: "/headers" 
+    route:
+    - destination:
+        host: demoservice 
+        subset: v2
+        port:
+          number: 8080
+  - match:  
+    - uri:
+        exact: /headers 
+    route:
+    - destination:
+        host: demoservice 
+        subset: v1
+        port:
+          number: 8080
+  - match:  
+    - uri:
+        regex: '/(.*)' 
+    route:
+    - destination: 
+        host: demoservice
+        subset: v1
+        port:
+          number: 8080
+      weight: LEFT
+    - destination: 
+        host: demoservice
+        subset: v2
+        port:
+          number: 8080
+      weight: RIGHT

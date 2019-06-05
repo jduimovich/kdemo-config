@@ -1,0 +1,12 @@
+
+if [ -z "$DOCKER_USER" ]
+then
+echo "\n"No DOCKER_USER set - using default jduimovich, this will pull images from that user.  "\n" 
+export DOCKER_USER=jduimovich
+else 
+echo "\n " DOCKER_USER is set to $DOCKER_USER "\n"
+fi
+
+export CONFIG_V1=$DOCKER_USER/config-v1 
+export DEMO_V1=$DOCKER_USER/demoservice-v1
+export DEMO_V2=$DOCKER_USER/demoservice-v2

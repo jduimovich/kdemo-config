@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Istio</title>
+</head>
+
+<body>
+
+  <h1>Istio A/B Testing and User Isolation</h1>
+
+
+<table style="width:100%">
+  <tr>
+    <td> 
+      <div id="graph"> Graph Appears Here </div>
+    </td>
+    <td> 
+      <div id="linedata"> line Appears Here </div>
+      <button onclick="togglestyle()">Toggle Graph Style</button>
+    </td> 
+  </tr> 
+</table>
+ 
+  <p>
+    <div id="json"> JSON Data Appears Here </div>
+  </p>
+
+  <table>
+    <tr>
+      <td>
+        <p> Endpoint
+          <select id="endpoint">
+            <option value="test">test</option>
+            <option value="headers">headers</option>
+          </select>
+        </p>
+      </td>
+      <td>
+        <p> User
+          <select id="user">
+            <option value="none">none</option>
+            <option value="john">john</option>
+            <option value="tim">tim</option>
+          </select>
+        </p>
+      </td>
+    </tr>
+  </table>
+
+<table style="width:100%">
+  <tr>
+    <td>
+      <p>
+        <div id="mode"> Balanced Deploy </div>
+        <div>
+          <input type="range" min="0" max="100" value="50" class="slider" id="istioSplit">
+        </div>
+      </p>
+    </td>
+    <td>
+      <p>
+        <div id="trim"> History </div>
+        <input type="range" min="10" max="500" value="100" class="slider" id="trimmer">
+      </p>
+    </td>
+    <td>
+      <p>
+        <div id="pollrate"> Poll Rate </div>
+        <input type="range" min="10" max="1000" value="100" class="slider" id="poller">
+      </p>
+    </td>
+  </tr>
+</table>
+
+
+ 
+
+ 
+
+  <p> Presets
+    <button onclick="allv1()">100% to V1</button>
+    <button onclick="fifty()">50-50 V1/V2</button>
+    <button onclick="allv2()">100% to V2</button> 
+  </p>
+
+  <script>
+    function getJSONAndUpdate(url, updateCB, optionalUser, errorCB) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            const data = JSON.parse(this.responseText);
+            data.url = url;
+            updateCB(data);
+          } else {
+            if (errorCB) errorCB();
+          }
+        }
+      };
+      xhttp.open("GET", url, true);
+      xhttp.setRequestHeader('Content-type', 'application/json');
+      xhttp.setRequestHeader('Accept', 'application/json');
+
+      xhttp.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+      xhttp.setRequestHeader('cache-control', 'max-age=0');
+      xhttp.setRequestHeader('expires', '0');
+      xhttp.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
+      xhttp.setRequestHeader('pragma', 'no-cache');
+      if (optionalUser) {
+        xhttp.setRequestHeader('mc-user', optionalUser);
+      }
+      xhttp.send();
+    }
+
+    function allv1() {
+      setBalance (100, updateBalanceAndSlider);
+    }
+    function fifty() {
+      setBalance (50, updateBalanceAndSlider);
+    }
+    function allv2() {
+      setBalance (0, updateBalanceAndSlider);
+    }
+    function togglestyle() {
+        if (counts.style == "mix") {
+          counts.style = "merge"
+          return;
+        }
+        if (counts.style == "merge") {
+          counts.style = "full"
+          return;
+        } 
+        if (counts.style == "full") {
+          counts.style = "mix"
+          return;
+        } 
+      }
+    
+
+    var period = 30;
+    var prior_v1 = 0;
+    var prior_v2 = 0;
+    var repeat = 0;
+
+    var counts = {
+      "v1": 0,
+      "v2": 0,
+      "total": 0,
+      "trim": 100,
+      "last100": [],
+      "url": 'test',
+      "user": undefined,
+      "lastData": [],
+      "style": "merge"
+    };
+
+    function prettyPrintLeftRight(left) {
+      return "L/R Balance = " + left + "/" + (100 - left)
+    }
+
+    var slider = document.getElementById("istioSplit");
+    slider.oninput = function () {
+      document.getElementById("mode").innerHTML = prettyPrintLeftRight(this.value);
+    }
+
+    function trimto1() { 
+        trim_to(1);
+    }
+    function setBalance (balance, cb) {
+      getJSONAndUpdate("config?balance=" + balance, cb);  
+    }
+
+    slider.onchange = function () {
+      document.getElementById("mode").innerHTML = prettyPrintLeftRight(this.value);
+      setBalance (this.value, updateBalance);
+    }
+
+    function updateBalance(ret) {
+      document.getElementById("mode").innerHTML = prettyPrintLeftRight(ret.left);
+    }
+    function updateBalanceAndSlider(ret) {
+      updateBalance(ret);
+      slider.value = ret.left;
+    }
+    function updateurlanduser() {
+      var e = document.getElementById("endpoint");
+      counts.url = e.options[e.selectedIndex].value;
+      var u = document.getElementById("user");
+      counts.user = u.options[u.selectedIndex].value;
+      if (counts.user == 'none') counts.user = undefined;
+    }
+
+    function hookupdate () { 
+      setTimeout("updateconfig()", 1000);
+    }
+    function updateBalanceAndSlider_rehook_update(ret) {
+      updateBalance(ret);
+      slider.value = ret.left;
+      hookupdate();
+    }
+
+    function updateconfig() {
+      updateurlanduser();
+      getJSONAndUpdate("config", updateBalanceAndSlider_rehook_update, undefined, hookupdate);
+    }
+
+    var trimmer = document.getElementById("trimmer");
+    trimmer.oninput = function () {
+      document.getElementById("trim").innerHTML = 'History: ' + this.value;
+      counts.trim = this.value;
+    }
+    trimmer.onchange = trimmer.oninput;
+
+    function setPeriod(p) {
+      document.getElementById("pollrate").innerHTML =
+        'Poll Rate: ' + p + ' ms';
+      period = p;
+      poller.value = p;
+    }
+
+    var poller = document.getElementById("poller");
+    poller.oninput = function () {
+      setPeriod(this.value)
+    }
+
+    poller.onchange = poller.oninput;
+
+    function trim_to (trim_to_count) { 
+      while (counts.last100.length > trim_to_count) {
+        var remove = counts.last100.shift();
+        if (remove.version == "1.0") {
+          counts.v1--;
+        }
+        if (remove.version == "2.0") {
+          counts.v2--;
+        }
+      }
+      while (counts.lastData.length > trim_to_count) {
+        counts.lastData.shift();
+      }
+    } 
+
+    function countResponses_then_resetPoll(countData) {
+      counts.last = countData;
+      if (countData.version == "1.0") {
+        counts.v1++;
+        counts.lastV1 = countData;
+      }
+      if (countData.version == "2.0") {
+        counts.v2++;
+        counts.lastV2 = countData;
+      }
+      if (counts.lastV1 && counts.lastV2) {
+        counts.total = counts.lastV1.count + counts.lastV2.count;
+      }
+      counts.last100.push(countData);
+      trim_to (counts.trim);
+      showGraphAndJSON(counts)
+      hookpoll();
+    }
+
+    function hookpoll () { 
+      setTimeout("poll()", period);
+    }
+
+    // if polling is too fast, you can get behind, so only update 
+    // poll for next one after prios repsonse
+    function poll() {
+      getJSONAndUpdate(counts.url, countResponses_then_resetPoll, counts.user, hookpoll);
+    }
+
+    function showLineData(divname, lineData) {  
+      var w = 600; 
+      var h = 200; 
+      var wscale = w / lineData.length;
+      var hscale = h / 100; // line data is always 0..100
+      
+      var s = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="200">';
+    
+       
+      
+      for (var i = 0; i < lineData.length - 1; i++) {
+        var xpos = i * wscale;
+        var ypos = h - (lineData[i].split * hscale);
+
+        if (counts.style == "mix") {
+          if (lineData[i].data.version == "1.0") {
+            s += '<path d="M' + xpos + ',' + 0 + '\n';
+            s += "l" + 0 + " " + ypos + "\n";
+            s += '"'
+            s += 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
+          } else {
+            s += '<path d="M' + xpos + ',' + ypos + '\n';
+            s += "l" + 0 + " " + (h - ypos) + "\n";
+            s += '"'
+            s += 'style="stroke:blue; stroke-width:6"; fill:none;"/> ';
+          }
+        } 
+        if (counts.style == "merge") {
+          s += '<path d="M' + xpos + ',' + ypos + '\n';
+          s += "l" + 0 + " " + (h - ypos) + "\n";
+          s += '"'
+          if (lineData[i].data.version == "1.0") {
+            s += 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
+          } else {
+            s += 'style="stroke:blue; stroke-width:6"; fill:none;"/> ';
+          }
+        }
+        if (counts.style == "full") {
+          s += '<path d="M' + xpos + ',' + 0 + '\n';
+          s += "l" + 0 + " " + h + "\n";
+          s += '"'
+          if (lineData[i].data.version == "1.0") {
+            s += 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
+          } else {
+            s += 'style="stroke:blue; stroke-width:6"; fill:none;"/> ';
+          }
+        }
+      }
+
+      s += ' <rect x="0" y="0" width="600" height="200" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />';
+      s+= '<path d="M0,'  + (lineData[0].split*hscale) + '\n';
+      for (var i = 0; i < lineData.length - 1; i++) {
+        var xpos = i * wscale;   
+        var ypos = h - (lineData[i].split * hscale);  
+        s += "L" + xpos + " " + ypos + "\n"; 
+      }
+      s+= '"'
+      s+= 'style="stroke:#660000; fill:none;"/> '; 
+      
+      s += '<defs> <filter x="0" y="0" width="1" height="1" id="solid"> <feFlood flood-color="yellow"/><feComposite in="SourceGraphic" operator="xor" /> </filter></defs>';
+   
+      s+=' <style> .svgfont { font: bold 16px sans-serif; fill: black; } </style>';
+      s+= '<text  x="20" y="20" class="svgfont">A/B History</text>'; 
+      s += '</svg>';
+      document.getElementById(divname).innerHTML = s;
+
+    }
+
+    function showGraphAndJSON(countData) {
+      var tv1 = counts.lastV1 ? counts.lastV1.count : 0;
+      var tv2 = counts.lastV2 ? counts.lastV2.count : 0;
+      var visual =
+        'Calls between <b>V1:</b> ' + countData.v1
+        + ' and <b>V2:</b> ' + countData.v2
+        + ' last ' + countData.trim + ' calls.'
+        + ' <b>Total:</b> ' + countData.total
+        + ' <br><b>Total V1:</b> ' + tv1
+        + ' <br><b>Total V2:</b> ' + tv2
+        + ' <br><b>Url:</b> ' + countData.url
+        + ' <br><b>User:</b> ' + countData.user
+        + ' <br><b>Last Call Version:</b> ' + countData.last.version
+        ;
+      document.getElementById("json").innerHTML = visual;
+
+      // don't  update SVG if same numbers as before
+      const v1 = countData.v1;
+      const v2 = countData.v2;
+      var sum = v1 + v2;
+      var last = new Object();
+      last.split = (countData.v2/sum) * 100;
+      last.data = countData.last;
+      counts.lastData.push(last);
+      showLineData ("linedata", counts.lastData );
+
+      if (v1 == prior_v1 && v2 == prior_v2) {
+        return;
+      }       
+      prior_v1 = v1;
+      prior_v2 = v2;
+      // HACK -- generate SVG and replace vars
+      // should figure out the DOM for SVG and replace values directly. 
+      var s = '<svg width="250" height="250"> <g transform="translate(50, 0)">';
+      
+      
+        s += '<rect x="5"   y="replaceleftY"   width="40" height="replaceleftHeight" fill="green"/>';
+      s += '<rect x="55"  y="replacerightY"  width="40" height="replacerightHeight" fill="blue"/>';
+      
+      s+=' <style> .svgfont { font: bold 16px sans-serif; fill: black; } </style>';
+      s+= '<text x="20" y="20" class="svgfont">A/B</text>';
+
+      s += '</g></svg>';
+      var totalBarHeight = 200;
+
+      var replaceleftY = totalBarHeight - ((v1 / sum) * totalBarHeight);
+      var replaceleftHeight = totalBarHeight - replaceleftY;
+      var replacerightY = totalBarHeight - ((v2 / sum) * totalBarHeight);
+      var replacerightHeight = totalBarHeight - replacerightY;
+      s = s.replace('replaceleftY', replaceleftY);
+      s = s.replace('replaceleftHeight', replaceleftHeight);
+      s = s.replace('replacerightY', replacerightY);
+      s = s.replace('replacerightHeight', replacerightHeight);
+      document.getElementById("graph").innerHTML = s;
+
+    }
+
+    // kick it off
+    poll();
+    updateconfig();
+    trimmer.onchange()
+    poller.onchange()
+
+  </script>
+
+</body>
+
+</html>

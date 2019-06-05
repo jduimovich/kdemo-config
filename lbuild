@@ -1,0 +1,2 @@
+source configuration
+docker build --build-arg DOCKER_USER=$DOCKER_USER  -t $CONFIG_V1 .
