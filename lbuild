@@ -1,2 +1,12 @@
-source configuration
-docker build --build-arg DOCKER_USER=$DOCKER_USER  -t $CONFIG_V1 .
+export CONTAINER_NAME=config
+
+export REVISION=$(git rev-parse --abbrev-ref HEAD)
+export DEMO_CONTAINER=$DOCKER_USER/$CONTAINER_NAME-$REVISION
+
+echo DOCKER_USER is set to $DOCKER_USER "\n"
+echo REVISION is set to $REVISION "\n"
+echo DEMO_CONTAINER is set to $DEMO_CONTAINER "\n"
+
+docker build --build-arg DOCKER_USER=$DOCKER_USER  -t $DEMO_CONTAINER .
+
+
