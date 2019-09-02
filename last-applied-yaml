@@ -95,7 +95,7 @@ spec:
     spec:
       containers:
       - name: config
-        image:  jduimovich/kdemo-config-h18-m08-s40  
+        image:  PIPELINE_REPLACE
         resources:
           limits:
             cpu: "300m"

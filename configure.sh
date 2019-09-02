@@ -22,7 +22,7 @@ t2=$(mktemp)
 echo $CONFIG
 
 cp deploy-template $t1
-sed "s!PIPELINE_REPLACE!$CONFIG!" $t1 > $t2
+sed "s!PIPELINE_REPLACE:latest!$CONFIG!" $t1 > $t2
 cp $t2 $t1
 sed s/DEMO_V1/${DEMO_V1////\\/}/ $t1 > $t2
 cp $t2 $t1
