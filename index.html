@@ -271,6 +271,18 @@
       getJSONAndUpdate(counts.url, countResponses_then_resetPoll, counts.user, hookpoll);
     }
 
+    function lineColour(data)
+    {
+      if (data.version.colour) {
+        return 'style="stroke:' + data.version.colour + '; stroke-width:6";  fill:none;"/> ';
+      }
+      if (data.version == "1.0") {
+        return 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
+      }
+      if (data.version == "2.0") {
+        return 'style="stroke:blue; stroke-width:6";  fill:none;"/> ';
+      }
+    }
     function showLineData(divname, lineData) {  
       var w = 600; 
       var h = 200; 
@@ -285,38 +297,28 @@
         var xpos = i * wscale;
         var ypos = h - (lineData[i].split * hscale);
 
+        
         if (counts.style == "mix") {
           if (lineData[i].data.version == "1.0") {
             s += '<path d="M' + xpos + ',' + 0 + '\n';
-            s += "l" + 0 + " " + ypos + "\n";
-            s += '"'
-            s += 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
+            s += "l" + 0 + " " + ypos + "\n"; 
           } else {
             s += '<path d="M' + xpos + ',' + ypos + '\n';
-            s += "l" + 0 + " " + (h - ypos) + "\n";
-            s += '"'
-            s += 'style="stroke:blue; stroke-width:6"; fill:none;"/> ';
+            s += "l" + 0 + " " + (h - ypos) + "\n"; 
           }
+          s+= lineColour(lineData[i].data);
         } 
         if (counts.style == "merge") {
           s += '<path d="M' + xpos + ',' + ypos + '\n';
           s += "l" + 0 + " " + (h - ypos) + "\n";
           s += '"'
-          if (lineData[i].data.version == "1.0") {
-            s += 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
-          } else {
-            s += 'style="stroke:blue; stroke-width:6"; fill:none;"/> ';
-          }
+          s+= lineColour(lineData[i].data);
         }
         if (counts.style == "full") {
           s += '<path d="M' + xpos + ',' + 0 + '\n';
           s += "l" + 0 + " " + h + "\n";
           s += '"'
-          if (lineData[i].data.version == "1.0") {
-            s += 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
-          } else {
-            s += 'style="stroke:blue; stroke-width:6"; fill:none;"/> ';
-          }
+          s+= lineColour(lineData[i].data);
         }
       }
 
