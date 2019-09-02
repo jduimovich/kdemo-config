@@ -1,0 +1,20 @@
+
+source configuration
+
+t1=$(mktemp) 
+t2=$(mktemp)  
+
+cp deploy-template $t1
+sed s/DEMO_V1/${DEMO_V1////\\/}/ $t1 > $t2
+cp $t2 $t1
+sed s/DEMO_V2/${DEMO_V2////\\/}/ $t1 > $t2
+cp $t2 $t1
+sed s/LEFT/50/ $t1 > $t2
+cp $t2 $t1
+sed s/RIGHT/50/ $t1 > $t2 
+cp $t2 config/deploy.yaml
+rm $t1
+rm $t2
+
+
+

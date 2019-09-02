@@ -21,7 +21,7 @@ COPY config.js .
 COPY index.html .
 COPY configuration .
 COPY configure.sh .
-COPY config/deploy.yaml service-template
+COPY deploy-template service-template
 
 ARG DOCKER_USER
 ENV DOCKER_USER=$DOCKER_USER

@@ -18,8 +18,6 @@ t1=$(mktemp)
 t2=$(mktemp)  
 
 cp service-template $t1
-sed s/CONFIG_V1/${CONFIG_V1////\\/}/ $t1 > $t2
-cp $t2 $t1
 sed s/DEMO_V1/${DEMO_V1////\\/}/ $t1 > $t2
 cp $t2 $t1
 sed s/DEMO_V2/${DEMO_V2////\\/}/ $t1 > $t2
