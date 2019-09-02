@@ -125,8 +125,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: demoservice-destination
-  namespace: default
+  name: demoservice-destination 
 spec:
   host: demoservice
   subsets:
