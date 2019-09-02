@@ -14,10 +14,16 @@ echo "Need a left value"
 exit   
 fi
 
+CONFIG=$(kubectl  get deployments -n tekton-pipelines config-v1  -o yaml | grep image: | cut -d ':' -f2)
+
 t1=$(mktemp) 
 t2=$(mktemp)  
 
-cp service-template $t1
+echo $CONFIG
+
+cp deploy-template $t1
+sed "s!PIPELINE_REPLACE!$CONFIG!" $t1 > $t2
+cp $t2 $t1
 sed s/DEMO_V1/${DEMO_V1////\\/}/ $t1 > $t2
 cp $t2 $t1
 sed s/DEMO_V2/${DEMO_V2////\\/}/ $t1 > $t2

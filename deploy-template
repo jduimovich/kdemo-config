@@ -95,7 +95,7 @@ spec:
     spec:
       containers:
       - name: config
-        image: PIPELINE_REPLACE:latest  
+        image: PIPELINE_REPLACE  
         resources:
           limits:
             cpu: "300m"

@@ -95,7 +95,7 @@ spec:
     spec:
       containers:
       - name: config
-        image: PIPELINE_REPLACE  
+        image:  jduimovich/kdemo-config-h18-m08-s40  
         resources:
           limits:
             cpu: "300m"
@@ -218,10 +218,10 @@ spec:
         subset: v1
         port:
           number: 8080
-      weight: 50
+      weight: 100
     - destination: 
         host: demoservice
         subset: v2
         port:
           number: 8080
-      weight: 50
+      weight: 0
