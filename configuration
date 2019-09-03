@@ -7,5 +7,5 @@ else
 echo "\n " DOCKER_USER is set to $DOCKER_USER "\n"
 fi
  
-export DEMO_V1=$DOCKER_USER/kdemo-app-h13-m02-s49
+export DEMO_V1=$DOCKER_USER/kdemo-app-h11-m37-s24
 export DEMO_V2=$DOCKER_USER/kdemo-app-h18-m20-s39
