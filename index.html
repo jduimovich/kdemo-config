@@ -271,17 +271,30 @@
       getJSONAndUpdate(counts.url, countResponses_then_resetPoll, counts.user, hookpoll);
     }
 
-    function lineColour(data)
-    {
-      if (data.colour) {
-        return 'style="stroke:' + data.colour + '; stroke-width:6";  fill:none;"/> ';
-      }
+    var colourFor1dot0 = 'green';
+    var colourFor2dot0 = 'blue';
+
+
+    // you can change the colours in 1.0 and 2.0 on the fly 
+    function colourForData(data) { 
       if (data.version == "1.0") {
-        return 'style="stroke:green; stroke-width:6";  fill:none;"/> ';
+        if (data.colour) {
+          colourFor1dot0 = data.colour;
+        }
+        return colourFor1dot0;
       }
       if (data.version == "2.0") {
-        return 'style="stroke:blue; stroke-width:6";  fill:none;"/> ';
-      }
+        if (data.colour) {
+          colourFor2dot0 = data.colour;
+        }
+        return colourFor2dot0;
+      } 
+      return 'black';
+    }
+
+    function styleByVersionOrColour(data)
+    { 
+        return 'style="stroke:' + colourForData(data.colour) + '; stroke-width:6";  fill:none;"/> ';
     }
     function showLineData(divname, lineData) {  
       var w = 600; 
@@ -290,9 +303,7 @@
       var hscale = h / 100; // line data is always 0..100
       
       var s = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="200">';
-    
-       
-      
+
       for (var i = 0; i < lineData.length - 1; i++) {
         var xpos = i * wscale;
         var ypos = h - (lineData[i].split * hscale);
@@ -306,19 +317,19 @@
             s += '<path d="M' + xpos + ',' + ypos + '\n';
             s += "l" + 0 + " " + (h - ypos) + "\n"; 
           }
-          s+= lineColour(lineData[i].data);
+          s+= styleByVersionOrColour(lineData[i].data);
         } 
         if (counts.style == "merge") {
           s += '<path d="M' + xpos + ',' + ypos + '\n';
           s += "l" + 0 + " " + (h - ypos) + "\n";
           s += '"'
-          s+= lineColour(lineData[i].data);
+          s+= styleByVersionOrColour(lineData[i].data);
         }
         if (counts.style == "full") {
           s += '<path d="M' + xpos + ',' + 0 + '\n';
           s += "l" + 0 + " " + h + "\n";
           s += '"'
-          s+= lineColour(lineData[i].data);
+          s+= styleByVersionOrColour(lineData[i].data);
         }
       }
 
@@ -377,8 +388,8 @@
       var s = '<svg width="250" height="250"> <g transform="translate(50, 0)">';
       
       
-        s += '<rect x="5"   y="replaceleftY"   width="40" height="replaceleftHeight" fill="green"/>';
-      s += '<rect x="55"  y="replacerightY"  width="40" height="replacerightHeight" fill="blue"/>';
+      s += '<rect x="5" y="replaceleftY" width="40" height="replaceleftHeight" fill="' + colourFor1dot0 +'"/>';
+      s += '<rect x="55"y="replacerightY"  width="40" height="replacerightHeight" fill="' + colourFor2dot0 + '"/>';
       
       s+=' <style> .svgfont { font: bold 16px sans-serif; fill: black; } </style>';
       s+= '<text x="20" y="20" class="svgfont">A/B</text>';
