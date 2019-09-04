@@ -14,12 +14,8 @@ echo "Need a left value"
 exit   
 fi
 
-CONFIG=$(kubectl  get deployments -n tekton-pipelines config-v1  -o yaml | grep image: | cut -d ':' -f2)
-if [ -z "$CONFIG" ]
-then
-    CONFIG=$(cat last-built) 
-    echo using $CONFIG for config image
-fi
+CONFIG=$(cat last-built) 
+echo using $CONFIG for config image
 
 t1=$(mktemp) 
 t2=$(mktemp)  
@@ -40,8 +36,8 @@ cp $t2 last-applied-yaml
 rm $t1
 rm $t2
 
-kubectl apply  -f last-applied-yaml 
+#kubectl apply  -f last-applied-yaml 
 
-cat last-applied-yaml
+#cat last-applied-yaml
 
 

@@ -2,3 +2,4 @@
 export DEMO_V1=jduimovich/kdemo-app:h11-m48-s28 
 export DEMO_V2=jduimovich/kdemo-app:h15-m19-s07 
 export DEMO_V2=jduimovich/kdemo-app:h15-m19-s07
+export DEMO_V2=jduimovich/kdemo-app:h16-m21-s18
