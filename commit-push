@@ -1,4 +1,5 @@
 
+sh update-ab
 sh generate-deploy
 
 TAG=$(date +"h%H-m%M-s%S")

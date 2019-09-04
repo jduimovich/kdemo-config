@@ -15,6 +15,11 @@ exit
 fi
 
 CONFIG=$(kubectl  get deployments -n tekton-pipelines config-v1  -o yaml | grep image: | cut -d ':' -f2)
+if [ -z "$CONFIG" ]
+then
+    CONFIG=$(cat last-built) 
+    echo using $CONFIG for config image
+fi
 
 t1=$(mktemp) 
 t2=$(mktemp)  
