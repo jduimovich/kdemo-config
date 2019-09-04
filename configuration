@@ -8,4 +8,4 @@ echo "\n " DOCKER_USER is set to $DOCKER_USER "\n"
 fi
  
 export DEMO_V1=$DOCKER_USER/kdemo-app-h12-m26-s24
-export DEMO_V2=$DOCKER_USER/kdemo-app-h18-m20-s39
+export DEMO_V2=$DOCKER_USER/kdemo-app:h22-m42-s55

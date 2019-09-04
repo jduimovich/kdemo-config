@@ -1,6 +1,6 @@
 sh commit-push
 
-sh ~/dev/kabanero-demo/scripts/run-webhook
+run-webhook
 
 
 
