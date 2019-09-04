@@ -6,14 +6,17 @@ const { exec } = require('child_process');
 var APP_VERSION = '1.0';
 
 function runsh(scriptname, cb) {
+	console.log("running shell" + scriptname);
 	var runcmd = '/bin/bash ' + scriptname;
 	exec(runcmd, (err, stdout, stderr) => {
 		if (err) {
 		    console.log("Error occurred" + err);
 			return;
 		}
+		console.log("-----output------");
 		console.log(`stdout: ${stdout}`);
 		console.log(`stderr: ${stderr}`);
+		console.log("-----done------");
 		if (cb) cb();
 	});
 }
@@ -62,9 +65,7 @@ app.get("/config", function (req, res) {
 	if (left) {
 	    console.log(req.url + " param = " + left); 
 	    balance(left);
-	} else { 
-		console.log(req.url + " query status "); 
-	}
+	} 
 	res.send(JSON.stringify(currentConfig()));
 });
 

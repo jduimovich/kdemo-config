@@ -36,7 +36,7 @@ cp $t2 last-applied-yaml
 rm $t1
 rm $t2
 
-#kubectl apply  -f last-applied-yaml 
+kubectl apply  -f last-applied-yaml 
 
 #cat last-applied-yaml
 
