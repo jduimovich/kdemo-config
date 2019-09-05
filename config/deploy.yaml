@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: demoservice
-        image: jduimovich/kdemo-app:h16-m29-s10
+        image: jduimovich/kdemo-app:h21-m27-s12
         resources:
           limits:
             cpu: "200m"
