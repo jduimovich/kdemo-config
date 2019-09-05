@@ -1,0 +1,5 @@
+POD=$(kubectl get pods -n tekton-pipelines | grep config | cut -d ' ' -f1)
+
+kubectl logs $POD -n tekton-pipelines -f
+
+
