@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: demoservice
-        image: jduimovich/kdemo-app:h15-m19-s07
+        image: jduimovich/kdemo-app:h21-m27-s12
         resources:
           limits:
             cpu: "200m"
@@ -95,7 +95,7 @@ spec:
     spec:
       containers:
       - name: config
-        image: jduimovich/kdemo-config:h15-m36-s52
+        image: jduimovich/kdemo-config:h21-m33-s41
         resources:
           limits:
             cpu: "300m"
@@ -218,10 +218,10 @@ spec:
         subset: v1
         port:
           number: 8080
-      weight: 50
+      weight: 90
     - destination: 
         host: demoservice
         subset: v2
         port:
           number: 8080
-      weight: 50
+      weight: 10
