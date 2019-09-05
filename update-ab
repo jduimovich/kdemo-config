@@ -1,3 +1,0 @@
-
-TAG=$(cat ../kdemo-app/last-built)
-echo "export DEMO_V2=$TAG" >>configuration

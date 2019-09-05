@@ -25,10 +25,6 @@ echo $CONFIG
 cp deploy-template $t1
 sed "s!PIPELINE_REPLACE:latest!$CONFIG!" $t1 > $t2
 cp $t2 $t1
-sed s/DEMO_V1/${DEMO_V1////\\/}/ $t1 > $t2
-cp $t2 $t1
-sed s/DEMO_V2/${DEMO_V2////\\/}/ $t1 > $t2
-cp $t2 $t1
 sed s/LEFT/$v1/ $t1 > $t2
 cp $t2 $t1
 sed s/RIGHT/$v2/ $t1 > $t2 
@@ -36,15 +32,7 @@ cp $t2 last-applied-yaml
 rm $t1
 rm $t2
 
-
-kubectl get pods
-kubectl get pods -n tekton-pipelines
-
-echo about to apply
-
 kubectl apply  -f last-applied-yaml  -n tekton-pipelines
-echo done
-echo ------
 
 cat last-applied-yaml
 
