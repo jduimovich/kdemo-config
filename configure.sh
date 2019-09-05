@@ -36,7 +36,7 @@ cp $t2 last-applied-yaml
 rm $t1
 rm $t2
 
-kubectl apply  -f last-applied-yaml  -n $TEKTON_DEMO_NS
+kubectl apply  -f last-applied-yaml  -n tekton-pipelines
 
 cat last-applied-yaml
 
