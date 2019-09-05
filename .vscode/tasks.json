@@ -10,6 +10,16 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "deploy",
+            "args": [ "deploy"
+            ], 
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
+ 

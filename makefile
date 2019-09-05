@@ -4,3 +4,7 @@ export TEKTON_DEMO_SA=tekton-dashboard
 	
 all:  
 	bash commit-push-build
+
+deploy:
+	sh redeploy
+	
