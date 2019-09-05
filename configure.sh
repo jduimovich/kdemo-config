@@ -36,7 +36,15 @@ cp $t2 last-applied-yaml
 rm $t1
 rm $t2
 
+
+kubectl get pods
+kubectl get pods -n tekton-pipelines
+
+echo about to apply
+
 kubectl apply  -f last-applied-yaml  -n tekton-pipelines
+echo done
+echo ------
 
 cat last-applied-yaml
 
