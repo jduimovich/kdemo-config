@@ -38,6 +38,6 @@ rm $t2
 
 kubectl apply  -f last-applied-yaml 
 
-#cat last-applied-yaml
+cat last-applied-yaml
 
 
