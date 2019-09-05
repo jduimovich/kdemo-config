@@ -1,0 +1,4 @@
+sh generate-deploy-artifact
+git add .
+git commit -m "$1 automatic commit for deploy"
+run-p0-pipeline $(git-repo-url) deploy
