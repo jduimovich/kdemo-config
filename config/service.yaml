@@ -30,10 +30,10 @@ spec:
         image: PIPELINE_REPLACE:latest
         resources:
           limits:
-            cpu: "300m"
+            cpu: "400m"
             memory: "256Mi"
           requests:
-            cpu: "300m"
+            cpu: "400m"
             memory: "128Mi"
         imagePullPolicy: Always
         ports:

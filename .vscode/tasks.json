@@ -4,17 +4,18 @@
     "tasks": [
         {
             "label": "commit-push-build",
-            "args": [ 
-            ], 
+            "args": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "deploy",
-            "args": [ "deploy"
-            ], 
+            "args": [
+                "deploy"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
