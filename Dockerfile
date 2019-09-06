@@ -21,8 +21,7 @@ RUN npm install --only=production
 COPY config.js .
 COPY index.html .
 COPY configuration .
-COPY configure.sh .
-COPY last-built .
+COPY configure.sh . 
 COPY deploy-template .
 
 ARG DOCKER_USER
