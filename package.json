@@ -1,6 +1,6 @@
 {
   "name": "knative-hellojs",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "knative hello",
   "main": "app.js",
   "scripts": {

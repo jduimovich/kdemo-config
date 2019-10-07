@@ -3,8 +3,6 @@ const app = express();
 var path = require('path');
 const { exec } = require('child_process');
 
-var APP_VERSION = '1.0';
-
 function runsh(scriptname, cb) {
 	console.log("running shell" + scriptname);
 	var runcmd = '/bin/bash ' + scriptname;
