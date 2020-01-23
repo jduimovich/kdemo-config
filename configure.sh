@@ -25,6 +25,13 @@ cp $t2 last-applied-yaml
 rm $t1
 rm $t2
 
-kubectl apply  -f last-applied-yaml  -n tekton-pipelines
+kubectl get namespaces | grep tekton-pipelines  > /dev/null
+if [ $? -eq 0 ] ; then
+   NS=grep tekton-pipelines 
+else
+   NS=grep kabanero 
+fi
+
+kubectl apply  -f last-applied-yaml  -n $NS
 
 
