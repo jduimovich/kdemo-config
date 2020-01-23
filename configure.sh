@@ -27,10 +27,12 @@ rm $t2
 
 kubectl get namespaces | grep tekton-pipelines  > /dev/null
 if [ $? -eq 0 ] ; then
-   NS=grep tekton-pipelines 
+   NS=tekton-pipelines 
 else
-   NS=grep kabanero 
+   NS=kabanero 
 fi
+
+echo Active Namespace is $NS 
 
 kubectl apply  -f last-applied-yaml  -n $NS
 
