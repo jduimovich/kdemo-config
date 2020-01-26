@@ -163,7 +163,7 @@
         }
       }
       var newData = [];
-      var xValue = ['A/B Ratio'];
+      var xValue = ['Microservice endpoint = /test '];
       var ab =['A', 'B', 'C', 'D', 'E', 'E' ];
       var abi=0;
       for (var i = 0; i < colours.length; i++) {
@@ -203,8 +203,10 @@
         }
       }
       var layout = {
-        title: 'Ratio'
-      };
+        title: 'Ratio',
+        yaxis: {range: [0, 100]}
+      }; 
+
       Plotly.newPlot('barChart', newData, layout);
     }
 
