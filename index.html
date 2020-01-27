@@ -34,9 +34,9 @@
       </td>
     </tr>
   </table>
- 
 
-  <div id="json"> JSON Data Appears Here </div>
+
+  <div id="json"> </div>
 
   <script>
     function getJSONAndUpdate(url, updateCB, optionalUser, errorCB) {
@@ -65,14 +65,15 @@
         xhttp.setRequestHeader('mc-user', optionalUser);
       }
       xhttp.send();
-    }
-    var period = 30; 
-    var counts = {
+    } 
+    var configuration = {
       "versions": new Object(),
       "total": 0,
       "max_history": 100,
       "history": [],
       "url": 'test',
+      "debug": false,
+      "period": 30,
       "user": undefined
     };
 
@@ -116,13 +117,13 @@
     var trimmer = document.getElementById("trimmer");
     trimmer.oninput = function () {
       document.getElementById("trim").innerHTML = 'History: ' + this.value;
-      counts.max_history = this.value;
+      configuration.max_history = this.value;
     }
     trimmer.onchange = trimmer.oninput;
     function setPeriod(p) {
       document.getElementById("pollrate").innerHTML =
         'Poll Rate: ' + p + ' ms';
-      period = p;
+      configuration.period = p;
       poller.value = p;
     }
     var poller = document.getElementById("poller");
@@ -133,28 +134,28 @@
 
     function countResponses_then_resetPoll(countData) {
       if (countData.colour == undefined) return;
-      var versions = counts.versions;
+      var versions = configuration.versions;
       var dataForColour = versions[countData.colour];
       if (!dataForColour) {
         dataForColour = { "count": 0, "version": countData.version };
         versions[countData.colour] = dataForColour;
       }
       dataForColour.count++;
-      counts.history.push(countData);
-      while (counts.history.length > counts.max_history) {
-        var remove = counts.history.shift();
-        var dataForColour = counts.versions[remove.colour];
-        dataForColour.count--; 
+      configuration.history.push(countData);
+      while (configuration.history.length > configuration.max_history) {
+        var remove = configuration.history.shift();
+        var dataForColour = configuration.versions[remove.colour];
+        dataForColour.count--;
       }
-      showResposeText(counts)
+      showResposeText(configuration)
       hookpoll();
-      showBarChart(counts);
+      showBarChart(configuration);
     }
 
-    function showBarChart(counts) {
-      var all = counts.versions;
-      var colours = Object.keys(all); 
-      colours.sort( function (a, b) { return all[a].version - all[b].version; }); 
+    function showBarChart(configuration) {
+      var all = configuration.versions;
+      var colours = Object.keys(all);
+      colours.sort(function (a, b) { return all[a].version - all[b].version; });
       var totalRequests = 0;
       for (var i = 0; i < colours.length; i++) {
         var dataforcolour = all[colours[i]];
@@ -164,8 +165,8 @@
       }
       var newData = [];
       var xValue = ['Microservice endpoint = /test '];
-      var ab =['A', 'B', 'C', 'D', 'E', 'E' ];
-      var abi=0;
+      var ab = ['A', 'B', 'C', 'D', 'E', 'F'];
+      var abi = 0;
       for (var i = 0; i < colours.length; i++) {
         var dataforcolour = all[colours[i]];
         if (dataforcolour.count >= 0) {
@@ -175,12 +176,12 @@
           }
           var yValue = [percent];
           var text = percent == -2 ? "" : Math.round(yValue.map(String));
-          var legend = 'V:'+dataforcolour.version;
-          if (percent == -2) { 
+          var legend = 'V:' + dataforcolour.version;
+          if (percent == -2) {
             legend = legend + ' (unused)';
-          } else { 
+          } else {
             legend = legend + ' ' + ab[abi++];
-            if (abi > ab.length) abi=0;
+            if (abi > ab.length) abi = 0;
           }
           var bar = {
             x: xValue,
@@ -204,22 +205,24 @@
       }
       var layout = {
         title: 'Ratio',
-        yaxis: {range: [0, 100]}
-      }; 
+        yaxis: { range: [0, 100] }
+      };
 
       Plotly.newPlot('barChart', newData, layout);
     }
 
     function hookpoll() {
-      setTimeout("poll()", period);
+      setTimeout("poll()", configuration.period);
     }
     // reset poll only after response to prevent overruning target server.
     function poll() {
-      getJSONAndUpdate(counts.url, countResponses_then_resetPoll, counts.user, hookpoll);
+      getJSONAndUpdate(configuration.url, countResponses_then_resetPoll, configuration.user, hookpoll);
     }
 
     function showResposeText(countData) {
-      document.getElementById("json").innerHTML = ' <br><b>DEBUG:</b> ' + JSON.stringify(countData.versions);
+      if (configuration.debug) {
+        document.getElementById("json").innerHTML = ' <br><b>DEBUG:</b> ' + JSON.stringify(countData.versions);
+      }
     }
 
     // kick it off
