@@ -225,6 +225,10 @@
       }
     }
 
+    if (window.location.href.includes ("debug") )  { 
+      configuration.debug=true;
+    }
+
     // kick it off
     poll();
     updateconfig();

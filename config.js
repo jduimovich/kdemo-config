@@ -77,6 +77,12 @@ app.get('/ui', function (req, res) {
 	res.setHeader('Content-Type', 'text/html');
 	res.sendFile(path.join(__dirname + '/index.html'));
 });
+app.get('/debug', function (req, res) {
+	console.log(req.url);
+	res.setHeader('Content-Type', 'text/html');
+	res.sendFile(path.join(__dirname + '/index.html'));
+});
+
 
 
 if (process.env.SIM) {
