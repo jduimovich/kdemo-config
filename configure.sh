@@ -1,5 +1,5 @@
 
-source configuration
+# configure.sh LEFT RIGHT 
 
 v1=$1
 v2=$2
