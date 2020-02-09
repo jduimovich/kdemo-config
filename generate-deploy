@@ -8,7 +8,7 @@ cp deploy-template $t1
 sed s/LEFT/50/ $t1 > $t2
 cp $t2 $t1
 sed s/RIGHT/50/ $t1 > $t2 
-cp $t2 config/deploy.yaml
+cp $t2 config/demoservice.yaml
 rm $t1
 rm $t2
 

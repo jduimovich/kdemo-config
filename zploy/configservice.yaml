@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: configservice
+spec:
+  hosts:
+  - "config.local"
+  gateways:
+  - demoservice-gateway
+  http:
+  - match:  
+    - uri:
+        regex: '/(.*)'
+    route:
+    - destination:
+        host: config
+        port:
+          number: 8080

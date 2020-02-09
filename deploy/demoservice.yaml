@@ -32,10 +32,10 @@ spec:
         subset: v1
         port:
           number: 8080
-      weight: LEFT
+      weight: 50
     - destination: 
         host: demoservice
         subset: v2
         port:
           number: 8080
-      weight: RIGHT
+      weight: 50
