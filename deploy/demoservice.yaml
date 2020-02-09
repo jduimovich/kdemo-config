@@ -23,9 +23,9 @@ spec:
   gateways:
   - demoservice-gateway
   http:         
-  - match:  
-    - uri:
-        regex: '/(.*)' 
+#  - match:  
+#    - uri:
+#        regex: '/(.*)' 
     route:
     - destination: 
         host: demoservice

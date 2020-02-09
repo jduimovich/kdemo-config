@@ -8,9 +8,6 @@ spec:
   gateways:
   - demoservice-gateway
   http:
-  - match:  
-    - uri:
-        regex: '/(.*)'
     route:
     - destination:
         host: config

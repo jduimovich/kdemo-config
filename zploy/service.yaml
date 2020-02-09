@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: config
+  labels:
+    group: istiodemo
+    app: config
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: config
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: config-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        group: istiodemo
+        app: config
+        version: v1
+    spec:
+      containers:
+      - name: config
+        image: jduimovich/kdemo-config:200208222527
+        resources:
+          limits:
+            cpu: "400m"
+            memory: "256Mi"
+          requests:
+            cpu: "400m"
+            memory: "128Mi"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
