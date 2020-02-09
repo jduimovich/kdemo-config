@@ -1,6 +1,10 @@
 # Use the official Node 8 image.
 # https://hub.docker.com/_/node 
+FROM mikefarah/yq 
+ 
+
 FROM node:8
+COPY --from=0 /usr/bin/yq /usr/bin/yq
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 RUN cp ./kubectl /usr/local/bin/kubectl
@@ -21,7 +25,7 @@ RUN npm install --only=production
 COPY config.js .
 COPY index.html . 
 COPY configure.sh . 
-COPY deploy-template .
+COPY config/demoservice.yaml demoservice.yaml
 
 ARG DOCKER_USER
 ENV DOCKER_USER=$DOCKER_USER
