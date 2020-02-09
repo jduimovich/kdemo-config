@@ -22,20 +22,22 @@ spec:
   - "demo.local"
   gateways:
   - demoservice-gateway
-  http:         
+  http:  
 #  - match:  
 #    - uri:
 #        regex: '/(.*)' 
-    route:
-    - destination: 
-        host: demoservice
-        subset: v1
-        port:
-          number: 8080
-      weight: 50
-    - destination: 
-        host: demoservice
-        subset: v2
-        port:
-          number: 8080
-      weight: 50
+   - route:
+      - destination: 
+          host: demoservice
+          subset: v1
+          port:
+            number: 8080
+        weight: 50
+      - destination: 
+          host: demoservice
+          subset: v2
+          port:
+            number: 8080
+        weight: 50
+
+
