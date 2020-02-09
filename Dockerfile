@@ -19,8 +19,7 @@ RUN npm install --only=production
 
 # Copy local code to the container image.
 COPY config.js .
-COPY index.html .
-COPY configuration .
+COPY index.html . 
 COPY configure.sh . 
 COPY deploy-template .
 
