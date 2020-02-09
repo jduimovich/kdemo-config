@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: config
-        image: jduimovich/kdemo-config:200208221841
+        image: jduimovich/kdemo-config:200208222527
         resources:
           limits:
             cpu: "400m"
