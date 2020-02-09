@@ -1,5 +1,4 @@
 
-source configuration
 
 t1=$(mktemp) 
 t2=$(mktemp)  
