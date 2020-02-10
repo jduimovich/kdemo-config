@@ -7,12 +7,9 @@ spec:
   - "config.local"
   gateways:
   - demoservice-gateway
-  http:
-  - match:  
-    - uri:
-        regex: '/(.*)'
-    route:
-    - destination:
+  http:  
+   - route:
+     - destination:
         host: config
         port:
           number: 8080
