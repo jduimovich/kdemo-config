@@ -58,20 +58,8 @@ function balance(left) {
 	return currentConfig();
 }
 
-var ab=0;
-function rollforward() { 
-	balance(100-ab);
-	ab += 10;
-	if (ab > 100) { 
-		ab = 0;
-	} else { 
-		setTimeout(rollforward, 10000);
-	} 
-}
-
 app.get("/ab", function (req, res) {
-	ab=0;
-	rollforward(); 
+	runsh("localab.sh")
 	res.send(JSON.stringify(currentConfig()));
 });
 

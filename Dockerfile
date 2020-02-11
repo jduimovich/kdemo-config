@@ -25,6 +25,7 @@ RUN npm install --only=production
 COPY config.js .
 COPY index.html . 
 COPY configure.sh . 
+COPY localab.sh . 
 COPY config/demoservice.yaml demoservice.yaml
 
 ARG DOCKER_USER
