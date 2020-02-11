@@ -119,14 +119,17 @@
     function updateconfig() {
       getJSONAndUpdate("config", updateBalanceAndSlider_rehook_update, hookupdate);
       if (configuration.enableAB) { 
+        console.log ("updateconfig perform AB Poll");
         getJSONAndUpdate("ab", function () {});
       }
     }
     function enableAB() {
-      configuration.enableAB=true
+      console.log ("enableAB");
+      configuration.enableAB=true;
     } 
     function disableAB() {
-      configuration.enableAB=false
+      console.log ("disableAB");
+      configuration.enableAB=false;
     } 
 
 
