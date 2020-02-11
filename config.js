@@ -60,8 +60,8 @@ function balance(left) {
 
 var ab=0;
 function rollforward() { 
-	balance(ab);
-	ab += 5;
+	balance(100-ab);
+	ab += 10;
 	if (ab > 100) { 
 		ab = 0;
 	} else { 
