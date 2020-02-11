@@ -58,20 +58,23 @@ function balance(left) {
 	return currentConfig();
 }
 
+var ab=0;
+function rollforward() { 
+	balance(ab);
+	ab += 5;
+	if (ab > 100) { 
+		ab = 0;
+	} else { 
+		setTimeout(rollforward, 2000);
+	} 
+}
 
+app.get("/ab", function (req, res) {
+	ab=0;
+	rollforward(); 
+	res.send(JSON.stringify(currentConfig()));
+});
 
-app.get("/balance-all-v1", function (req, res) {
-	balance(100);
-	res.send(JSON.stringify(currentConfig()));
-});
-app.get("/balance-all-v2", function (req, res) {
-	balance(0);
-	res.send(JSON.stringify(currentConfig()));
-});
-app.get("/balance-50-50", function (req, res) {
-	balance(50);
-	res.send(JSON.stringify(currentConfig()));
-});
 app.get('/ui', function (req, res) {
 	console.log(req.url);
 	res.setHeader('Content-Type', 'text/html');
