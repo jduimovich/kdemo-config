@@ -3,10 +3,9 @@ sh generate-deploy
 
 TAG=$(date +"h%H-m%M-s%S")
 MSG=$1
-echo "This commit added by demo-script at: " $TAG >> README.md
+echo "This commit added by demo-script at: " $TAG >> log.md
 git add .
 git commit -m "$1 automatic commit for demo"
-
 
 git remote | xargs | grep ibm >/dev/null
 if [ $? -eq 0 ] ; then

@@ -7,7 +7,7 @@ spec:
   - "demo.local"
   gateways:
   - demoservice-gateway
-  http:   
+  http:  
    - route:
       - destination: 
           host: demoservice
