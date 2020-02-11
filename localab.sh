@@ -20,34 +20,14 @@ if [ $V1_STATUS == "original" ] ; then
   if [ $V2_WEIGHT == "100" ] ; then
     echo  V2 Completed 
   else  
-    echo Moving Primary Service to V2
-    sh configure.sh 100 0
-    sleep 5
-    sh configure.sh 80 20
-    sleep 5
-    sh configure.sh 60 40
-    sleep 5
-    sh configure.sh 40 60
-    sleep 5
-    sh configure.sh 20 80
-    sleep 5
-    sh configure.sh 0  100
+    echo Moving Primary Service to V2 
+    sh configure.sh 0 100
   fi
 else 
   if [ $V1_WEIGHT == "100" ] ; then
     echo  V1 Completed 
   else  
-    echo Moving Primary Service to V1
-    sh configure.sh 0  100
-    sleep 5
-    sh configure.sh 20 80
-    sleep 5
-    sh configure.sh 40 60
-    sleep 5
-    sh configure.sh 60 40
-    sleep 5
-    sh configure.sh 80 20
-    sleep 5
+    echo Moving Primary Service to V1   
     sh configure.sh 100 0
   fi
 fi
