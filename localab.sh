@@ -1,4 +1,11 @@
 
+FILE=inprogress
+if test -f "$FILE"; then
+    echo "$FILE exist"
+    exit
+fi
+echo inprogress > $FILE
+
 V1_STATUS=$(kubectl get deployments -n kabanero demoservice-v1 -o yaml | yq r - spec.template.metadata.labels.status)
 V2_STATUS=$(kubectl get deployments -n kabanero demoservice-v2 -o yaml | yq r - spec.template.metadata.labels.status)
 
@@ -56,5 +63,6 @@ else
   fi
 
 fi
+rm $FILE
 
  

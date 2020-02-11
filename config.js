@@ -59,7 +59,7 @@ function balance(left) {
 }
 
 app.get("/ab", function (req, res) {
-	runsh("localab.sh")
+	runsh("backgroundab.sh")
 	res.send(JSON.stringify(currentConfig()));
 });
 

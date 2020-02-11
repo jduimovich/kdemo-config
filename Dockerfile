@@ -26,6 +26,7 @@ COPY config.js .
 COPY index.html . 
 COPY configure.sh . 
 COPY localab.sh . 
+COPY backgroundab.sh . 
 COPY config/demoservice.yaml demoservice.yaml
 
 ARG DOCKER_USER
