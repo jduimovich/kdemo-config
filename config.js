@@ -65,7 +65,7 @@ function rollforward() {
 	if (ab > 100) { 
 		ab = 0;
 	} else { 
-		setTimeout(rollforward, 2000);
+		setTimeout(rollforward, 10000);
 	} 
 }
 
