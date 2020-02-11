@@ -37,13 +37,11 @@
   <div id="json"> 
 
 <div>
-  <input type="radio" id="auto" name="abtest" value="auto"
-  onclick="enableAB">
+  <input type="radio" id="auto" name="abtest" value="auto"  onclick="enableAB()">
   <label for="auto">Auto/AB</label>
 </div>
 <div>
-  <input type="radio" id="manual" name="abtest" value="manual"
-  onclick="disableAB" checked >
+  <input type="radio" id="manual" name="abtest" value="manual" onclick="disableAB()" checked >
   <label for="manual">Manual AB</label>
 </div>
 
@@ -117,7 +115,7 @@
     }
 
     function updateconfig() {
-      console.log ("updateconfig");
+      console.log ("updateconfig" + " AB " + configuration.enableAB);
       getJSONAndUpdate("config", updateBalanceAndSlider_rehook_update, hookupdate);
       if (configuration.enableAB) { 
         console.log ("updateconfig perform AB Poll");
