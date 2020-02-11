@@ -34,8 +34,20 @@
       </td>
     </tr>
   </table>
-  <div id="json"> </div>
+  <div id="json"> 
 
+<div>
+  <input type="radio" id="auto" name="abtest" value="auto"
+  onclick="enableAB">
+  <label for="auto">Auto/AB</label>
+</div>
+<div>
+  <input type="radio" id="manual" name="abtest" value="manual"
+  onclick="disableAB" checked >
+  <label for="manual">Manual AB</label>
+</div>
+
+ 
   <script>
     function getJSONAndUpdate(url, updateCB, errorCB) {
       var xhttp = new XMLHttpRequest();
@@ -67,7 +79,8 @@
       "history": [],
       "url": 'http://demo.local/test',
       "debug": false,
-      "period": 30
+      "period": 30,
+      "enableAB": false
     };
 
     function prettyPrintLeftRight(left) {
@@ -105,7 +118,18 @@
 
     function updateconfig() {
       getJSONAndUpdate("config", updateBalanceAndSlider_rehook_update, hookupdate);
+      if (configuration.enableAB) { 
+        getJSONAndUpdate("ab", function () {});
+      }
     }
+    function enableAB() {
+      configuration.enableAB=true
+    } 
+    function disableAB() {
+      configuration.enableAB=false
+    } 
+
+
 
     var trimmer = document.getElementById("trimmer");
     trimmer.oninput = function () {
