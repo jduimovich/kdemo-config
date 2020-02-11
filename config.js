@@ -59,6 +59,7 @@ function balance(left) {
 }
 
 app.get("/ab", function (req, res) {
+	console.log(req.url);
 	runsh("backgroundab.sh")
 	res.send(JSON.stringify(currentConfig()));
 });
@@ -97,6 +98,7 @@ if (process.env.SIM) {
 	console.log("Running on non-container for simulations");
 } else { 
 	app.get("/config", function (req, res) {
+		console.log(req.url);
 		var left = req.query.balance;
 		if (left) {
 			console.log(req.url + " param = " + left);

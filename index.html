@@ -117,6 +117,7 @@
     }
 
     function updateconfig() {
+      console.log ("updateconfig");
       getJSONAndUpdate("config", updateBalanceAndSlider_rehook_update, hookupdate);
       if (configuration.enableAB) { 
         console.log ("updateconfig perform AB Poll");
