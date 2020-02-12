@@ -113,7 +113,10 @@
     }
     function updateBalanceAndSlider_rehook_update(ret) {
       updateBalance(ret);
-      slider.value = ret.left;
+      if (configuration.enableAB) 
+      {
+        slider.value = ret.left;
+      } 
       hookupdate();
     }
 
