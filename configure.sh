@@ -28,4 +28,8 @@ echo Active Namespace is $NS
 
 kubectl apply  -f demoservice.yaml  -n $NS
 
+echo '{ "left": ' $v1 ', "right":'  $v2 '}' >lr
+
+ 
+
 

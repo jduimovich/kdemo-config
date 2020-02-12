@@ -19,6 +19,12 @@ function runsh(scriptname, cb) {
 	});
 }
 
+function getlr() { 
+	var fs = require('fs');
+	var contents = fs.readFileSync('lr', 'utf8');
+	return contents;  
+}
+
 var inProgress = false;
 var configuredLeft = 50;
 var configuredRight = 50;
@@ -63,6 +69,11 @@ app.get("/ab", function (req, res) {
 	runsh("backgroundab.sh")
 	res.send(JSON.stringify(currentConfig()));
 });
+
+app.get("/lr", function (req, res) {  
+	res.send( getlr() );
+});
+
 
 app.get('/ui', function (req, res) {
 	console.log(req.url);
