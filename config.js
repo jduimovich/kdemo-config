@@ -35,10 +35,13 @@ var numUpdates = 0;
 var totalTimeUpdates = 0;
 function currentConfig() {
 	var printTime = (elapsedTime / 1000);
-	var average = numUpdates > 0 ? totalTimeUpdates / numUpdates / 1000 : 0;
+	var average = numUpdates > 0 ? totalTimeUpdates / numUpdates / 1000 : 0;'
+	var lr = JSON.parse (getlr());
 	return {
-		"left": configuredLeft,
-		"right": configuredRight,
+		"left": lr.left,
+		"right": lr.right,
+		"totalTimeUpdates": totalTimeUpdates,
+		"numUpdates": numUpdates,
 		"updateInProgress": inProgress,
 		"timeForLastUpdate": (inProgress ? "-" : printTime.toFixed(2)),
 		"avgTimeForUpdate": average.toFixed(2)
