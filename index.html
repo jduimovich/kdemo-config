@@ -102,11 +102,14 @@
     }
     function updateBalanceAndSlider(ret) {
       updateBalance(ret);
-      slider.value = ret.left;
+      if (configuration.enableAB) 
+      {
+        slider.value = ret.left;
+      }
     }
 
     function hookupdate() {
-      setTimeout("updateconfig()", 1000);
+      setTimeout("updateconfig()", 3000);
     }
     function updateBalanceAndSlider_rehook_update(ret) {
       updateBalance(ret);
