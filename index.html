@@ -51,10 +51,16 @@
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4) {
-          if (this.status == 200) {
-            const data = JSON.parse(this.responseText);
-            data.url = url;
-            updateCB(data);
+          if (this.status == 200) { 
+            try {
+              const data = JSON.parse(this.responseText);
+              data.url = url;
+              updateCB(data);
+            } catch(err) { 
+              // keep going 
+              const data = { "left": 0, "right": 0, "url": url};
+              updateCB(data);
+            }  
           } else {
             if (errorCB) errorCB();
           }
