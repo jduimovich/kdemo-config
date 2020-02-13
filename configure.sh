@@ -14,8 +14,11 @@ echo "Need a left value"
 exit   
 fi
 
-yq w -i demoservice.yaml spec.http[0].route[0].weight $v1
-yq w -i demoservice.yaml spec.http[0].route[1].weight $v2
+DIR=ab-deploy
+SVC=$DIR/demoservice.yaml 
+
+yq w -i $SVC spec.http[0].route[0].weight $v1
+yq w -i $SVC spec.http[0].route[1].weight $v2
 
 kubectl get namespaces | grep tekton-pipelines  > /dev/null
 if [ $? -eq 0 ] ; then
@@ -26,7 +29,7 @@ fi
 
 echo Active Namespace is $NS 
 
-kubectl apply  -f demoservice.yaml  -n $NS
+kubectl apply  -f $DIR  -n $NS
 
 echo '{ "left": ' $v2 ', "right":'  $v1 '}' >lr
 

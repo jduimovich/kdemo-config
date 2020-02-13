@@ -1,5 +1,4 @@
 
-sh generate-deploy
 
 TAG=$(date +"h%H-m%M-s%S")
 MSG=$1

@@ -6,11 +6,19 @@ if test -f "$FILE"; then
 fi
 echo inprogress > $FILE
 
+NS=kabanero 
+
 V1_IMAGE=$(kubectl get deployments -n kabanero demoservice-v1 -o yaml | yq r - spec.template.spec.containers[0].image)
 V2_IMAGE=$(kubectl get deployments -n kabanero demoservice-v2 -o yaml | yq r - spec.template.spec.containers[0].image)
-V1_WEIGHT=$(kubectl get vs -n kabanero demoservice -o yaml | yq r - spec.http[0].route[0].weight)
-V2_WEIGHT=$(kubectl get vs -n kabanero demoservice -o yaml | yq r - spec.http[0].route[1].weight)
 
+kubectl get destinationrule -n $NS   >/dev/null
+if [ $? -eq 0 ] ; then
+echo run kubectl  
+VERSION=$(kubectl get destinationrule -n $NS -o yaml | yq r - items[0].spec.subsets[0].labels.version)
+else 
+     echo  "No Service, run the default v1-v2 upgrade" 
+     VERSION=v1
+fi
 
 echo Running AB Roll Forward 
 echo demoservice-v1 is $V1_IMAGE  
@@ -20,20 +28,20 @@ TAG_V1=$(echo $V1_IMAGE | cut -f2 -d ':')
 TAG_V2=$(echo $V2_IMAGE | cut -f2 -d ':')
 
 if [ $TAG_V2 -gt $TAG_V1 ] ; then
-  echo  "move to V2"   
-  if [ $V2_WEIGHT == "100" ] ; then
-    echo  V2 Completed 
+  echo  "Should be moved to V2"   
+  if [ $VERSION == "v2" ] ; then
+    echo  V2 already active 
   else  
     echo Moving Primary Service to V2 
-    sh configure.sh 0 100
+    sh run-experiment.sh demoservice-v1 demoservice-v2
   fi
 else
   echo  "move to  V1"      
-  if [ $V1_WEIGHT == "100" ] ; then
-    echo  V1 Completed 
+  if [ $VERSION == "v1" ] ; then 
+    echo  V1 already active 
   else  
     echo Moving Primary Service to V1   
-    sh configure.sh 100 0
+    sh run-experiment.sh demoservice-v2 demoservice-v1
   fi
 fi
 

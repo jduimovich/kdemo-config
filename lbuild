@@ -1,2 +1,4 @@
-CONFIG_V1=jduimovich/kdemo-config 
+CONFIG_V1=jduimovich/kdemo-config:200213131560
 docker build --build-arg DOCKER_USER=$DOCKER_USER  -t $CONFIG_V1 .
+
+docker push $CONFIG_V1

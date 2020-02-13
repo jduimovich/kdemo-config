@@ -162,7 +162,11 @@
     poller.onchange = poller.oninput;
 
     function countResponses_then_resetPoll(countData) {
-      if (countData.colour == undefined) return;
+      if (countData.colour == undefined) { 
+        hookpoll();
+        return;
+      }
+
       var versions = configuration.versions;
       var dataForColour = versions[countData.colour];
       if (!dataForColour) {
@@ -250,7 +254,8 @@
 
     function showResposeText(countData) {
       if (configuration.debug) {
-        document.getElementById("json").innerHTML = ' <br><b>DEBUG:</b> ' + JSON.stringify(countData.versions);
+        document.getElementById("json").innerHTML = 
+        ' <br><b>DEBUG:</b> ' + countData.total + " " + JSON.stringify(countData.versions) ;
       }
     }
     if (window.location.href.includes("debug")) {

@@ -25,11 +25,10 @@ RUN npm install --only=production
 COPY config.js .
 COPY index.html . 
 COPY configure.sh . 
-COPY localab.sh . 
-COPY backgroundab.sh .
+COPY run-ab-experiment.sh .  
+COPY run-experiment.sh .  
 COPY lr .
-
-COPY config/demoservice.yaml demoservice.yaml
+COPY ab-deploy ap-deploy
 
 ARG DOCKER_USER
 ENV DOCKER_USER=$DOCKER_USER

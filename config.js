@@ -67,33 +67,26 @@ function balance(left) {
 	return currentConfig();
 }
 
-app.get("/ab", function (req, res) {
+function returnIndex(req, res) {
 	console.log(req.url);
-	runsh("backgroundab.sh")
-	res.send(JSON.stringify(currentConfig()));
-});
-
+	res.setHeader('Content-Type', 'text/html');
+	res.sendFile(path.join(__dirname + '/index.html'));
+}
+app.get('/ui', returnIndex);
+app.get('/debug', returnIndex); 
 app.get("/lr", function (req, res) {
 	res.send(getlr());
 });
 
-
-app.get('/ui', function (req, res) {
+app.get("/ab", function (req, res) {
 	console.log(req.url);
-	res.setHeader('Content-Type', 'text/html');
-	res.sendFile(path.join(__dirname + '/index.html'));
+	runsh("run-ab-experiment.sh")
+	res.send(JSON.stringify(currentConfig()));
 });
-app.get('/debug', function (req, res) {
-	console.log(req.url);
-	res.setHeader('Content-Type', 'text/html');
-	res.sendFile(path.join(__dirname + '/index.html'));
-});
-
-
 
 if (process.env.SIM) {
+	console.log("Running on non-container for simulations");
 	function redirect(url) {
-
 		return function (req, outerres) {
 			const request = require('request');
 			var query = "";
@@ -108,7 +101,6 @@ if (process.env.SIM) {
 		}
 	}
 	app.get('/config', redirect('/simconfig'));
-	console.log("Running on non-container for simulations");
 } else {
 	app.get('/test',
 		function (req, outerres) {
@@ -133,8 +125,6 @@ if (process.env.SIM) {
 		res.send(JSON.stringify(currentConfig()));
 	});
 }
-
-
 
 const port = process.env.PORT || 8080;
 app.listen(port, function () {
