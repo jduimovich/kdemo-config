@@ -28,7 +28,8 @@ COPY configure.sh .
 COPY run-ab-experiment.sh .  
 COPY run-experiment.sh .  
 COPY lr .
-COPY ab-deploy ap-deploy
+COPY ab-deploy ab-deploy
+COPY experiments experiments
 
 ARG DOCKER_USER
 ENV DOCKER_USER=$DOCKER_USER
