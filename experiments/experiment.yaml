@@ -1,7 +1,7 @@
 apiVersion: iter8.tools/v1alpha1
 kind: Experiment
 metadata:
-  name: id-0214175954
+  name: id-0214185200
 spec:
   targetService:
     name: demoservice
@@ -9,15 +9,8 @@ spec:
     baseline: demoservice-v1
     candidate: demoservice-v2
   trafficControl:
-    strategy: check_and_increment
+    strategy: increment_without_check
     interval: 10s
-    trafficStepSize: 20
-    maxIterations: 8
-    maxTrafficPercentage: 80
-  analysis:
-    analyticsService: "http://iter8-analytics.iter8"
-    successCriteria:
-    - metricName: iter8_latency
-      toleranceType: threshold
-      tolerance: 0.2
-      sampleSize: 5
+    trafficStepSize: 5
+    maxIterations: 20
+    maxTrafficPercentage: 100
