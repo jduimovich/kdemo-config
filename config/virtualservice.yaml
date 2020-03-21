@@ -4,12 +4,16 @@ metadata:
   name: configservice
 spec:
   hosts:
-  - "config.local"
+  - "*" 
   gateways:
   - demoservice-gateway
+  selector:
+      matchLabels:
+        name: configservice
   http:  
    - route:
      - destination:
-        host: config
+        host: config-frontend
         port:
           number: 8080
+ 
